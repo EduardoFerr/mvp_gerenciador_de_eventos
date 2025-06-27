@@ -1,0 +1,80 @@
+// backend/prisma/schema.prisma
+// Este arquivo define o schema do banco de dados para o Prisma ORM.
+
+// Define o provedor do banco de dados (PostgreSQL neste caso).
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL") // A URL de conexão é obtida de uma variável de ambiente.
+}
+
+// Define o gerador do cliente Prisma.
+// O 'output' especifica onde o cliente Prisma será gerado.
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client" // CORREÇÃO: Alterado para um subdiretório seguro.
+}
+
+// Modelo para a entidade User (Usuário)
+model User {
+  id        String   @id @default(uuid()) // ID único do usuário, gerado automaticamente como UUID.
+  email     String   @unique             // Endereço de e-mail do usuário, deve ser único.
+  password  String                      // Senha do usuário (hash).
+  role      Role     @default(USER)     // Papel do usuário (USER ou ADMIN), padrão é USER.
+  createdAt DateTime @default(now())    // Data e hora de criação do registro.
+  updatedAt DateTime @updatedAt         // Data e hora da última atualização do registro.
+
+  events      Event[]        // Relação: Um usuário pode criar vários eventos (se for admin).
+  reservations Reservation[] // Relação: Um usuário pode ter várias reservas. (onDelete está na Reservation)
+}
+
+// Enum para definir os papéis dos usuários.
+enum Role {
+  USER
+  ADMIN
+}
+
+// Modelo para a entidade Event (Evento)
+model Event {
+  id             String    @id @default(uuid()) // ID único do evento, gerado automaticamente como UUID.
+  name           String                       // Nome do evento, obrigatório.
+  description    String?                      // Descrição do evento, opcional.
+  eventDate      DateTime                     // Data e hora do evento, obrigatório.
+  location       String?                      // Localização do evento (para eventos presenciais), opcional.
+  onlineLink     String?                      // Link online do evento (para eventos online), opcional.
+  maxCapacity    Int                          // Capacidade máxima de participantes, obrigatório e > 0.
+  availableSpots Int                          // Vagas disponíveis, calculado dinamicamente.
+  creatorId      String                       // ID do usuário (admin) que criou o evento.
+  createdAt      DateTime  @default(now())    // Data e hora de criação do registro.
+  updatedAt      DateTime  @updatedAt         // Data e hora da última atualização do registro.
+
+  creator     User          @relation(fields: [creatorId], references: [id]) // Relação com o User que criou o evento.
+  reservations Reservation[] // Relação: Um evento pode ter várias reservas. (onDelete está na Reservation)
+
+  // Garante que pelo menos um dos campos (location ou onlineLink) seja fornecido, mas não ambos.
+  // Esta validação será feita na camada da aplicação, não diretamente no schema do banco de dados.
+  // @check(location IS NOT NULL OR onlineLink IS NOT NULL) // Exemplo de constraint a ser validada no código.
+  // @check(NOT (location IS NOT NULL AND onlineLink IS NOT NULL))
+}
+
+// Modelo para a entidade Reservation (Reserva)
+model Reservation {
+  id              String         @id @default(uuid()) // ID único da reserva, gerado automaticamente como UUID.
+  eventId         String                           // ID do evento ao qual a reserva pertence.
+  userId          String                           // ID do usuário que fez a reserva.
+  reservationDate DateTime       @default(now())    // Data e hora em que a reserva foi feita, gerado automaticamente.
+  status          ReservationStatus @default(CONFIRMED) // Status da reserva (CONFIRMED ou CANCELED).
+
+  event  Event @relation(fields: [eventId], references: [id], onDelete: Cascade) // <--- CORREÇÃO AQUI
+  user   User  @relation(fields: [userId], references: [id], onDelete: Cascade)  // <--- CORREÇÃO AQUI
+
+  // Garante que um usuário só pode ter uma reserva por evento no status CONFIRMED.
+  // Esta validação também será feita na camada da aplicação, se necessário.
+  @@unique([eventId, userId, status], name: "unique_event_user_confirmed_reservation")
+}
+
+// Enum para definir o status das reservas.
+enum ReservationStatus {
+  CONFIRMED
+  CANCELED
+}
+

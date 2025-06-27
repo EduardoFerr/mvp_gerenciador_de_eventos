@@ -1,0 +1,14 @@
+services:
+  backend:
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
+      SEED_DB: true
+
+  frontend:
+    volumes:
+      - ./frontend:/app
+      - /app/.next
+      - /app/node_modules

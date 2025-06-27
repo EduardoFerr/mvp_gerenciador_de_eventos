@@ -1,0 +1,34 @@
+# Arquivos e diretórios ignorados pelo Git no backend/
+
+# Dependências do Node.js
+node_modules/
+
+# Diretório de build do TypeScript
+dist/
+
+# Variáveis de ambiente
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Arquivos gerados pelo Prisma
+/prisma/migrations/  # Embora os arquivos de migração sejam código,
+                     # se você não quiser rastrear cada alteração granular,
+                     # pode ignorar e re-gerá-los conforme necessário.
+                     # Para a maioria dos projetos, é melhor rastrear as migrations.
+                     # Se preferir rastrear, remova esta linha.
+/prisma/schema.prisma.bak # Backups de schema
+/.prisma/              # Cliente Prisma gerado
+
+# Arquivos de cobertura de teste
+/coverage/
+
+# Docker build cache (se existirem na pasta)
+.dockerignore

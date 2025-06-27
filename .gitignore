@@ -1,0 +1,46 @@
+# Arquivos e diretórios ignorados pelo Git no projeto raiz
+
+# Dependências
+node_modules/
+
+# Variáveis de ambiente
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Docker
+.docker/
+docker-compose.override.yml  # Se usar overrides locais
+*.env.local                # Ignorar todos os .env.local em subdiretórios
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.pnpm-store/
+
+# Diretórios de build/saída (geralmente dentro dos subdiretórios)
+build/
+dist/
+out/
+
+# Configurações IDE e Sistema Operacional
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Ignorar o diretório backend e frontend para que os .gitignore internos funcionem melhor
+# Se você quiser que o git rastreie os diretórios vazios mas ignore o conteúdo, adicione um .gitkeep dentro deles
+/backend/node_modules/
+/backend/dist/
+/backend/.env
+/backend/.env.*
+
+/frontend/node_modules/
+/frontend/.next/
+/frontend/.env.local
+/frontend/.env.*

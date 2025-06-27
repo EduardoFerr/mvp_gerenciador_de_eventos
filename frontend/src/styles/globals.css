@@ -1,0 +1,82 @@
+/* frontend/src/styles/globals.css */
+
+/* Importa as diretivas básicas do Tailwind CSS. */
+/* Estes são os estilos base que redefinem alguns padrões de navegador e incluem utilitários. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Define variáveis CSS para as cores e raios de borda. */
+/* Estes são usados pelo Tailwind CSS para criar um sistema de design consistente. */
+@layer base {
+  :root {
+    --background: 0 0% 100%;       /* Cor de fundo principal (branco) */
+    --foreground: 222.2 47.4% 11.2%; /* Cor de texto principal (preto acinzentado) */
+
+    --muted: 210 40% 96.1%;         /* Cor para elementos secundários/silenciosos */
+    --muted-foreground: 215.4 16.3% 46.9%; /* Cor de texto para elementos secundários */
+
+    --popover: 0 0% 100%;          /* Cor de fundo para popovers */
+    --popover-foreground: 222.2 47.4% 11.2%; /* Cor de texto para popovers */
+
+    --border: 214.3 31.8% 91.4%;    /* Cor de borda */
+    --input: 214.3 31.8% 91.4%;     /* Cor de entrada de texto */
+    --card: 0 0% 100%;             /* Cor de fundo para cartões */
+    --card-foreground: 222.2 47.4% 11.2%; /* Cor de texto para cartões */
+
+    --primary: 222.2 47.4% 11.2%;  /* Cor primária (azul escuro/quase preto) */
+    --primary-foreground: 210 40% 98%; /* Cor de texto para cor primária (branco suave) */
+
+    --secondary: 210 40% 96.1%;    /* Cor secundária (cinza claro) */
+    --secondary-foreground: 222.2 47.4% 11.2%; /* Cor de texto para cor secundária */
+
+    --accent: 210 40% 96.1%;       /* Cor de destaque */
+    --accent-foreground: 222.2 47.4% 11.2%; /* Cor de texto para destaque */
+
+    --destructive: 0 84.2% 60.2%;  /* Cor para ações destrutivas (vermelho) */
+    --destructive-foreground: 210 40% 98%; /* Cor de texto para destrutivo */
+
+    --ring: 215 20.2% 65.1%;       /* Cor para anéis de foco */
+
+    --radius: 0.5rem;              /* Raio de borda padrão (para cantos arredondados) */
+  }
+
+  /* Define um tema escuro (dark mode) se a classe 'dark' estiver presente no HTML. */
+  .dark {
+    --background: 222.2 47.4% 11.2%;
+    --foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --popover: 222.2 47.4% 11.2%;
+    --popover-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --card: 222.2 47.4% 11.2%;
+    --card-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 217.2 32.6% 17.5%;
+  }
+}
+
+/* Aplica a fonte Inter (se disponível) e estilos básicos ao corpo do documento. */
+/* Garante que o fundo e a cor do texto sigam as variáveis CSS definidas. */
+body {
+  font-family: 'Inter', sans-serif;
+  @apply bg-background text-foreground;
+}
+
