@@ -19,9 +19,9 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
 
   return (
     <header className={cn(
-      "bg-primary text-primary-foreground p-4 shadow-md",
+      "bg-primary text-primary-foreground p-4", // Removido 'shadow-md'
       "flex flex-col sm:flex-row justify-between items-center gap-4",
-      "rounded-b-lg", // Adiciona bordas arredondadas na parte inferior
+      "rounded-b-none", // Removido arredondamento inferior (rounded-b-lg) para mais flat
       className
     )}>
       <div className="flex-shrink-0">

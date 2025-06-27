@@ -15,13 +15,13 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow hover:bg-primary/90", // Cor primária
+          "bg-primary text-primary-foreground hover:bg-primary/90", // Removido 'shadow'
         destructive:
-          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90", // Cor destrutiva
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90", // Removido 'shadow-sm'
         outline:
-          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground", // Borda e fundo transparente
+          "border border-input bg-background hover:bg-accent hover:text-accent-foreground", // Removido 'shadow-sm'
         secondary:
-          "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80", // Cor secundária
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80", // Removido 'shadow-sm'
         ghost: "hover:bg-accent hover:text-accent-foreground", // Sem fundo, apenas hover
         link: "text-primary underline-offset-4 hover:underline", // Estilo de link
       },

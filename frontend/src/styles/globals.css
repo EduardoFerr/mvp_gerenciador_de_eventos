@@ -1,49 +1,47 @@
 /* frontend/src/styles/globals.css */
 
 /* Importa as diretivas básicas do Tailwind CSS. */
-/* Estes são os estilos base que redefinem alguns padrões de navegador e incluem utilitários. */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* Define variáveis CSS para as cores e raios de borda. */
-/* Estes são usados pelo Tailwind CSS para criar um sistema de design consistente. */
 @layer base {
   :root {
-    --background: 0 0% 100%;       /* Cor de fundo principal (branco) */
-    --foreground: 222.2 47.4% 11.2%; /* Cor de texto principal (preto acinzentado) */
+    --background: 0 0% 100%;       /* Cor de fundo principal (branco sólido) */
+    --foreground: 222.2 47.4% 11.2%; /* Cor de texto principal (quase preto) */
 
-    --muted: 210 40% 96.1%;         /* Cor para elementos secundários/silenciosos */
+    --muted: 210 20% 95%;         /* Cor para elementos secundários/silenciosos, mais flat */
     --muted-foreground: 215.4 16.3% 46.9%; /* Cor de texto para elementos secundários */
 
     --popover: 0 0% 100%;          /* Cor de fundo para popovers */
     --popover-foreground: 222.2 47.4% 11.2%; /* Cor de texto para popovers */
 
-    --border: 214.3 31.8% 91.4%;    /* Cor de borda */
-    --input: 214.3 31.8% 91.4%;     /* Cor de entrada de texto */
-    --card: 0 0% 100%;             /* Cor de fundo para cartões */
+    --border: 210 20% 90%;          /* Cor de borda mais suave */
+    --input: 210 20% 95%;           /* Cor de entrada de texto, mais flat */
+    --card: 0 0% 100%;             /* Cor de fundo para cartões, sólido */
     --card-foreground: 222.2 47.4% 11.2%; /* Cor de texto para cartões */
 
-    --primary: 222.2 47.4% 11.2%;  /* Cor primária (azul escuro/quase preto) */
-    --primary-foreground: 210 40% 98%; /* Cor de texto para cor primária (branco suave) */
+    --primary: 220 70% 30%;        /* Cor primária (azul escuro/médio, sólido) */
+    --primary-foreground: 0 0% 100%; /* Cor de texto para cor primária (branco) */
 
-    --secondary: 210 40% 96.1%;    /* Cor secundária (cinza claro) */
+    --secondary: 210 40% 90%;      /* Cor secundária (cinza claro, sólido) */
     --secondary-foreground: 222.2 47.4% 11.2%; /* Cor de texto para cor secundária */
 
-    --accent: 210 40% 96.1%;       /* Cor de destaque */
+    --accent: 210 40% 90%;         /* Cor de destaque */
     --accent-foreground: 222.2 47.4% 11.2%; /* Cor de texto para destaque */
 
-    --destructive: 0 84.2% 60.2%;  /* Cor para ações destrutivas (vermelho) */
-    --destructive-foreground: 210 40% 98%; /* Cor de texto para destrutivo */
+    --destructive: 0 80% 50%;      /* Cor para ações destrutivas (vermelho sólido) */
+    --destructive-foreground: 0 0% 100%; /* Cor de texto para destrutivo (branco) */
 
-    --ring: 215 20.2% 65.1%;       /* Cor para anéis de foco */
+    --ring: 215 20% 50%;           /* Cor para anéis de foco, neutra */
 
-    --radius: 0.5rem;              /* Raio de borda padrão (para cantos arredondados) */
+    --radius: 0.25rem;              /* Raio de borda padrão reduzido (4px) */
   }
 
-  /* Define um tema escuro (dark mode) se a classe 'dark' estiver presente no HTML. */
+  /* Tema escuro (dark mode) - Ajuste se for implementar um tema escuro flat */
   .dark {
-    --background: 222.2 47.4% 11.2%;
+    --background: 220 70% 15%; /* Fundo escuro mais flat */
     --foreground: 210 40% 98%;
 
     --muted: 217.2 32.6% 17.5%;
@@ -73,10 +71,19 @@
   }
 }
 
-/* Aplica a fonte Inter (se disponível) e estilos básicos ao corpo do documento. */
-/* Garante que o fundo e a cor do texto sigam as variáveis CSS definidas. */
+/* Aplica a fonte Inter e estilos básicos ao corpo do documento. */
 body {
   font-family: 'Inter', sans-serif;
   @apply bg-background text-foreground;
 }
 
+/* Remover sombras padrão de elementos, pois o estilo flat as evita. */
+.shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl, .shadow-inner, .shadow-none {
+  box-shadow: none !important;
+}
+
+/* Remover arredondamentos padrão maiores (se não desejar nenhum arredondamento) */
+/* Isto é opcional e depende do quão "hard flat" você quer. As variáveis --radius em tailwind.config.js controlam o padrão. */
+/* .rounded-lg, .rounded-xl, .rounded-2xl, .rounded-3xl, .rounded-full {
+  border-radius: var(--radius) !important;
+} */

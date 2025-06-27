@@ -1,18 +1,30 @@
 COMPOSE=docker-compose.yml
 OVERRIDE=docker-compose.override.yml
-JWT=your_jwt_secret_here
 
 up:
-	docker compose -f $(COMPOSE) -f $(OVERRIDE) up --build --force-recreate
+	docker compose -f $(COMPOSE) -f $(OVERRIDE) build --build-arg BUILD_DATE=$(shell date +%Y%m%d%H%M%S) backend
+	docker compose -f $(COMPOSE) -f $(OVERRIDE) build frontend
+	docker compose -f $(COMPOSE) -f $(OVERRIDE) up --force-recreate
+
+up-no-cache:
+	docker compose -f $(COMPOSE) -f $(OVERRIDE) build --no-cache --build-arg BUILD_DATE=$(shell date +%Y%m%d%H%M%S) backend
+	docker compose -f $(COMPOSE) -f $(OVERRIDE) build --no-cache frontend
+	docker compose -f $(COMPOSE) -f $(OVERRIDE) up --force-recreate
 
 down:
 	docker compose down
 
+rmi:
+	docker compose -f $(COMPOSE) -f $(OVERRIDE) down --rmi all --volumes --remove-orphans
+rm:
+	docker compose -f $(COMPOSE) -f $(OVERRIDE) down --remove-orphans
 logs:
 	docker compose logs -f
 
 migrate:
 	docker compose exec backend npx prisma migrate dev
+seed:
+	docker compose exec backend npm run prisma:seed
 
 generate:
 	docker compose exec backend npx prisma generate
@@ -49,3 +61,13 @@ test-me:
 	@TOKEN=$$(curl -s -X POST http://localhost:3001/api/users/login -H "Content-Type: application/json" -d '{"email":"admin@admin.com","password":"password123"}' | jq -r '.token'); \
 	echo "Token: $$TOKEN"; \
 	curl -s -H "Authorization: Bearer $$TOKEN" http://localhost:3001/api/users/me | jq
+
+test-reservations:
+	@echo "Fazendo teste de leitura de reservas..."
+	@TOKEN=$$(curl -s -X POST http://localhost:3001/api/users/login \
+		-H "Content-Type: application/json" \
+		-d '{"email":"admin@admin.com","password":"password123"}' | jq -r '.token'); \
+	echo "Token gerado: $$TOKEN"; \
+	echo "Requisição para /reservations/my-reservations..."; \
+	curl -s -H "Authorization: Bearer $$TOKEN" \
+		http://localhost:3001/api/reservations/my-reservations | jq

@@ -54,7 +54,6 @@ const EventCard: React.FC<EventCardProps> = ({ event, onReserve, userRole, isRes
   const isSpotsAvailable = event.availableSpots > 0;
 
   // Lógica para determinar se o botão de reserva deve ser exibido/habilitado.
-  // O usuário deve ser 'USER', deve haver vagas, não deve estar reservado e o evento não deve ter passado.
   const canUserAttemptReserve = userRole === 'USER' && !isEventPast && onReserve !== undefined;
 
   // Texto e estado do botão de reserva
@@ -71,14 +70,13 @@ const EventCard: React.FC<EventCardProps> = ({ event, onReserve, userRole, isRes
     buttonText = 'Vaga Reservada';
     isButtonDisabled = true;
   }
-  // A lógica abaixo no JSX cuidará da exibição do botão com base no userRole e isAuthenticated.
 
 
   return (
     <div className={cn(
-      "bg-card text-card-foreground border border-border rounded-lg shadow-lg overflow-hidden",
+      "bg-card text-card-foreground border border-border rounded-md overflow-hidden", // Removido shadow-lg, ajustado rounded-md
       "transition-transform duration-300 hover:scale-[1.02]",
-      "flex flex-col", // Garante que o conteúdo se organize em coluna
+      "flex flex-col",
       className
     )}>
       <div className="p-6 flex-grow">
@@ -154,4 +152,3 @@ const EventCard: React.FC<EventCardProps> = ({ event, onReserve, userRole, isRes
 };
 
 export default EventCard;
-

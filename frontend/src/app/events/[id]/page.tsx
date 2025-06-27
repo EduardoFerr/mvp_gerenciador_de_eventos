@@ -1,7 +1,6 @@
 // frontend/src/app/events/[id]/page.tsx
-// Esta página exibe os detalhes de um evento específico.
 
-"use client"; // Marca este componente como um Componente Cliente.
+"use client"; 
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
@@ -13,7 +12,6 @@ import { Button } from '@/components/ui/button';
 import { CalendarIcon, MapPinIcon, LinkIcon, UsersIcon, UserCircleIcon, ClockIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-// Interface para o tipo de dados do evento.
 interface Event {
   id: string;
   name: string;
@@ -32,7 +30,6 @@ interface Event {
   updatedAt: string;
 }
 
-// Interface para o tipo de dados da reserva.
 interface Reservation {
   id: string;
   eventId: string;
@@ -51,9 +48,8 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = ({ params }) => {
   const [error, setError] = useState<string | null>(null);
   const [isReserved, setIsReserved] = useState(false);
   const [isReserving, setIsReserving] = useState(false);
-  const [reservationMessage, setReservationMessage] = useState<string | null>(null); // Para mensagens de sucesso/erro da reserva
+  const [reservationMessage, setReservationMessage] = useState<string | null>(null); 
 
-  // Função para buscar os detalhes do evento.
   const fetchEventDetails = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -67,7 +63,6 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = ({ params }) => {
     }
   }, [eventId]);
 
-  // Função para verificar se o usuário atual já tem uma reserva para este evento.
   const checkUserReservation = useCallback(async () => {
     if (!isAuthenticated || user?.role !== 'USER') {
       setIsReserved(false);
@@ -81,23 +76,20 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = ({ params }) => {
       setIsReserved(found);
     } catch (err: any) {
       console.error('Erro ao verificar reservas do usuário:', err);
-      setIsReserved(false); // Assume que não está reservado em caso de erro.
+      setIsReserved(false); 
     }
   }, [isAuthenticated, eventId, user]);
 
-  // Efeito para carregar os detalhes do evento e verificar a reserva do usuário.
   useEffect(() => {
     fetchEventDetails();
   }, [fetchEventDetails]);
 
-  // Efeito para verificar a reserva do usuário após a autenticação ser carregada.
   useEffect(() => {
     if (!authLoading) {
       checkUserReservation();
     }
   }, [authLoading, checkUserReservation]);
 
-  // Função para lidar com a reserva de um evento.
   const handleReserve = async () => {
     if (!isAuthenticated) {
       setReservationMessage('Você precisa estar logado para reservar uma vaga.');
@@ -122,22 +114,20 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = ({ params }) => {
     }
 
     setIsReserving(true);
-    setReservationMessage(null); // Limpa mensagens anteriores
+    setReservationMessage(null); 
     try {
       const res = await apiFetch<{ message: string; reservation: Reservation }>(`/reservations/events/${eventId}/reserve`, {
         method: 'POST',
       });
       setReservationMessage(res.message);
-      // Atualiza o estado local do evento para refletir as vagas diminuídas.
       if (event) {
         setEvent(prevEvent => prevEvent ? { ...prevEvent, availableSpots: prevEvent.availableSpots - 1 } : null);
       }
-      setIsReserved(true); // Marca como reservado.
+      setIsReserved(true); 
     } catch (err: any) {
-      // Mensagem de erro mais específica, tratando o caso de reserva duplicada do backend
       if (err.message && err.message.includes('você já possui uma reserva confirmada')) {
         setReservationMessage('Falha na reserva: Você já possui uma reserva confirmada para este evento.');
-        setIsReserved(true); // Garante que o estado seja atualizado
+        setIsReserved(true); 
       } else if (err.message && err.message.includes('não há mais vagas disponíveis')) {
         setReservationMessage('Falha na reserva: Não há mais vagas disponíveis.');
       } else {
@@ -150,10 +140,10 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = ({ params }) => {
 
   if (loading || authLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="min-h-screen bg-background flex flex-col">
         <Header />
         <main className="flex-grow flex items-center justify-center">
-          <div className="text-lg text-gray-600">Carregando detalhes do evento...</div>
+          <div className="text-lg text-muted-foreground">Carregando detalhes do evento...</div>
         </main>
       </div>
     );
@@ -161,7 +151,7 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = ({ params }) => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="min-h-screen bg-background flex flex-col">
         <Header />
         <main className="flex-grow flex items-center justify-center">
           <div className="text-destructive text-lg font-semibold">{error}</div>
@@ -172,10 +162,10 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = ({ params }) => {
 
   if (!event) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="min-h-screen bg-background flex flex-col">
         <Header />
         <main className="flex-grow flex items-center justify-center">
-          <div className="text-gray-600 text-lg">Evento não encontrado.</div>
+          <div className="text-lg text-muted-foreground">Evento não encontrado.</div>
         </main>
       </div>
     );
@@ -196,7 +186,6 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = ({ params }) => {
   const isSpotsAvailable = event.availableSpots > 0;
   const canReserveLogic = user?.role === 'USER' && isSpotsAvailable && !isReserved && !isEventPast;
 
-  // Lógica para o texto e estado do botão de reserva na página de detalhes
   let buttonText = 'Reservar Minha Vaga';
   let isButtonDisabled = isReserving;
   let reservationStatusMessage: string | null = null;
@@ -212,53 +201,52 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = ({ params }) => {
     isButtonDisabled = true;
   } else if (!isAuthenticated) {
     reservationStatusMessage = 'Faça login para reservar uma vaga.';
-    isButtonDisabled = true; // Desabilita o botão para usuários não autenticados
+    isButtonDisabled = true; 
     buttonText = 'Entrar para Reservar';
   } else if (user?.role === 'ADMIN') {
     reservationStatusMessage = 'Administradores não podem reservar vagas.';
     isButtonDisabled = true;
-    buttonText = 'Ação de Administrador'; // Texto genérico para admins
+    buttonText = 'Ação de Administrador'; 
   } else {
-    // Se nenhuma das condições acima for atendida, o botão está habilitado para reserva
     isButtonDisabled = isReserving;
   }
 
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header />
       <main className="flex-grow container mx-auto p-4 md:p-8">
-        <div className="bg-white p-8 rounded-lg shadow-xl max-w-2xl mx-auto">
-          <h1 className="text-4xl font-bold text-primary-foreground mb-4 text-center">{event.name}</h1>
+        <div className="bg-card p-8 rounded-md mx-auto w-full max-w-2xl">
+          <h1 className="text-4xl font-bold text-foreground mb-4 text-center">{event.name}</h1>
           <p className="text-muted-foreground text-center mb-6">{event.description}</p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 text-lg mb-8">
             <div className="flex items-center gap-3">
-              <CalendarIcon className="w-6 h-6 text-primary-foreground" />
+              <CalendarIcon className="w-6 h-6 text-primary" />
               <span>Data: {formattedDate}</span>
             </div>
             <div className="flex items-center gap-3">
-              <ClockIcon className="w-6 h-6 text-primary-foreground" />
+              <ClockIcon className="w-6 h-6 text-primary" />
               <span>Hora: {formattedTime}</span>
             </div>
             {event.location && (
               <div className="flex items-center gap-3">
-                <MapPinIcon className="w-6 h-6 text-primary-foreground" />
+                <MapPinIcon className="w-6 h-6 text-primary" />
                 <span>Local: {event.location}</span>
               </div>
             )}
             {event.onlineLink && (
               <div className="flex items-center gap-3">
-                <LinkIcon className="w-6 h-6 text-primary-foreground" />
+                <LinkIcon className="w-6 h-6 text-primary" />
                 <span>Link Online: <a href={event.onlineLink} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">{event.onlineLink}</a></span>
               </div>
             )}
             <div className="flex items-center gap-3">
-              <UsersIcon className="w-6 h-6 text-primary-foreground" />
+              <UsersIcon className="w-6 h-6 text-primary" />
               <span>Vagas: {event.availableSpots} / {event.maxCapacity}</span>
             </div>
             <div className="flex items-center gap-3">
-              <UserCircleIcon className="w-6 h-6 text-primary-foreground" />
+              <UserCircleIcon className="w-6 h-6 text-primary" />
               <span>Criado por: {event.creator.email}</span>
             </div>
           </div>
@@ -273,11 +261,10 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = ({ params }) => {
               </p>
             )}
 
-            {/* Exibe a mensagem de status da reserva acima do botão */}
-            {reservationStatusMessage && !reservationMessage && ( // Só exibe se não houver uma mensagem de reserva ativa
+            {reservationStatusMessage && !reservationMessage && (
                 <span className={cn(
                     "text-xl font-medium",
-                    isEventPast || !isSpotsAvailable ? 'text-destructive' : isReserved ? 'text-green-600' : 'text-gray-600'
+                    isEventPast || !isSpotsAvailable ? 'text-destructive' : isReserved ? 'text-green-600' : 'text-muted-foreground'
                 )}>
                     {reservationStatusMessage}
                 </span>
@@ -286,16 +273,16 @@ const EventDetailPage: React.FC<{ params: { id: string } }> = ({ params }) => {
             {user?.role === 'USER' && (
               <Button
                 onClick={handleReserve}
-                disabled={isButtonDisabled} // Usa o estado calculado
+                disabled={isButtonDisabled} 
                 className="w-full max-w-xs"
               >
                 {isReserving ? 'Reservando...' : buttonText}
               </Button>
             )}
 
-            {!isAuthenticated && ( // Exibe link de login apenas se não autenticado e não for admin
-                <p className="text-gray-600 text-sm">
-                    <Link href="/login" className="text-primary-foreground hover:underline">Faça login</Link> para reservar uma vaga.
+            {!isAuthenticated && ( 
+                <p className="text-muted-foreground text-sm">
+                    <Link href="/login" className="text-primary hover:underline">Faça login</Link> para reservar uma vaga.
                 </p>
             )}
 
