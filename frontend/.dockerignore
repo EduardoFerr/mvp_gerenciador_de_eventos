@@ -1,1 +1,24 @@
-**/node_modules
+    # Ignora arquivos e diretórios gerados localmente para não serem copiados para o contêiner Docker
+
+    # Diretórios de dependências
+    node_modules/
+
+    # Diretórios de build
+    dist/
+
+    # Arquivos de depuração e cache
+    npm-debug.log*
+    .npm/
+    .yarn/
+    *.log
+
+    # Variáveis de ambiente locais (já excluídas pelo .gitignore principal, mas boa prática repetir aqui)
+    .env
+    .env.local
+    .env.*.local
+
+    # Arquivos temporários e de sistema
+    tmp/
+    *.tmp
+    *.bak
+    

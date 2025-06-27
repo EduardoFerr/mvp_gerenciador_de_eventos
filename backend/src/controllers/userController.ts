@@ -1,47 +1,33 @@
-// backend/src/controllers/userController.ts
-// Este arquivo contém a lógica para o gerenciamento de usuários (registro, login, CRUD).
-
 import { Request, Response } from 'express';
 import { PrismaClient, Role } from '@prisma/client';
 import bcrypt from 'bcryptjs';
-import { generateToken } from '../config/jwt'; // Assumindo que generateToken está em config/jwt
+import { generateToken } from '../config/jwt';
 import { registerSchema, loginSchema } from '../validation/schemas';
 import { ZodError } from 'zod';
-import { prisma } from '../server'; // Importa a instância do Prisma do server.ts
+import { prisma } from '../server';
 
-/**
- * Registra um novo usuário.
- * Requisitos: email (único), password (mínimo 6 caracteres).
- * Papel padrão: USER.
- */
 export const registerUser = async (req: Request, res: Response) => {
   try {
-    // 1. Valida os dados de entrada com o schema Zod.
     const { email, password } = registerSchema.parse(req.body);
 
-    // 2. Verifica se o usuário já existe.
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       return res.status(409).json({ message: 'E-mail já registrado.' });
     }
 
-    // 3. Hash da senha antes de salvar no banco de dados.
-    const hashedPassword = await bcrypt.hash(password, 10); // 10 é o salt rounds
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    // 4. Cria o novo usuário no banco de dados.
     const newUser = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
-        role: Role.USER, // Novo usuário é sempre ROLE.USER por padrão.
+        role: Role.USER,
       },
-      select: { id: true, email: true, role: true, createdAt: true }, // Retorna apenas informações seguras.
+      select: { id: true, email: true, role: true, createdAt: true },
     });
 
-    // 5. Gera um JWT para o novo usuário.
     const token = generateToken({ id: newUser.id, role: newUser.role });
 
-    // 6. Envia a resposta de sucesso.
     res.status(201).json({
       message: 'Usuário registrado com sucesso!',
       user: {
@@ -52,43 +38,30 @@ export const registerUser = async (req: Request, res: Response) => {
       token,
     });
   } catch (error) {
-    console.debug('Erro ao registrar usuário:', error);
-    // Lida com erros de validação Zod.
     if (error instanceof ZodError) {
       return res.status(400).json({ message: 'Erro de validação.', errors: error.errors });
     }
-    // Lida com outros erros.
     console.error('Erro ao registrar usuário:', error);
     res.status(500).json({ message: 'Erro interno do servidor ao registrar usuário.' });
   }
 };
 
-/**
- * Autentica um usuário.
- * Requisitos: email, password.
- * Retorna um JWT em caso de sucesso.
- */
 export const loginUser = async (req: Request, res: Response) => {
   try {
-    // 1. Valida os dados de entrada com o schema Zod.
     const { email, password } = loginSchema.parse(req.body);
 
-    // 2. Busca o usuário pelo e-mail.
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
       return res.status(400).json({ message: 'Credenciais inválidas.' });
     }
 
-    // 3. Compara a senha fornecida com a senha hash armazenada.
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(400).json({ message: 'Credenciais inválidas.' });
     }
 
-    // 4. Gera um JWT para o usuário autenticado.
     const token = generateToken({ id: user.id, role: user.role });
 
-    // 5. Envia a resposta de sucesso.
     res.status(200).json({
       message: 'Login realizado com sucesso!',
       user: {
@@ -99,52 +72,28 @@ export const loginUser = async (req: Request, res: Response) => {
       token,
     });
   } catch (error) {
-    // Lida com erros de validação Zod.
     if (error instanceof ZodError) {
       return res.status(400).json({ message: 'Erro de validação.', errors: error.errors });
     }
-    // Lida com outros erros.
     console.error('Erro ao fazer login:', error);
     res.status(500).json({ message: 'Erro interno do servidor ao fazer login.' });
   }
 };
 
-/**
- * Obtém o perfil do usuário logado (requer autenticação).
- * Um usuário pode ver seu próprio perfil.
- * Admin pode ver qualquer perfil.
- */
 export const getUserProfile = async (req: Request, res: Response) => {
   try {
-    const { id: paramId } = req.params; // ID do usuário a ser buscado (se vier da rota para admin)
-    const requestingUserId = req.userId; // ID do usuário que fez a requisição (do token JWT)
-    const requestingUserRole = req.role; // Papel do usuário que fez a requisição
+    const { id: paramId } = req.params;
+    const requestingUserId = req.userId;
+    const requestingUserRole = req.role;
 
-    let userIdToFetch: string; // Declara userIdToFetch como string
-
-    // Adicionando log para depuração
-    console.log(`[getUserProfile] Tentando buscar perfil para userId do token: ${requestingUserId}`);
-
-    // Garante que requestingUserId não é undefined antes de prosseguir
-    if (requestingUserId === undefined) {
-      console.warn('[getUserProfile] userId é undefined no token. Possível problema de autenticação.');
+    if (!requestingUserId) {
       return res.status(401).json({ message: 'Não autorizado: ID de usuário ausente no token.' });
     }
 
-    // Lógica para determinar qual ID de usuário buscar:
-    // Se um paramId é fornecido E o usuário é ADMIN, use o paramId.
-    // Caso contrário, use o ID do usuário que fez a requisição (requestingUserId, que já foi validado como string).
-    if (paramId && requestingUserRole === Role.ADMIN) {
-      userIdToFetch = paramId;
-      console.log(`[getUserProfile] Admin requisitando perfil de ID: ${userIdToFetch}`);
-    } else {
-      userIdToFetch = requestingUserId; // requestingUserId é garantido ser string aqui.
-      console.log(`[getUserProfile] Usuário comum ou self-request: ${userIdToFetch}`);
-    }
+    const userIdToFetch =
+      paramId && requestingUserRole === Role.ADMIN ? paramId : requestingUserId;
 
-    // Garante que userIdToFetch é uma string não vazia antes de usar no where clause do Prisma
     if (!userIdToFetch) {
-      console.error('[getUserProfile] userIdToFetch é vazio após lógica de determinação.');
       return res.status(400).json({ message: 'ID do usuário inválido para busca de perfil.' });
     }
 
@@ -154,11 +103,9 @@ export const getUserProfile = async (req: Request, res: Response) => {
     });
 
     if (!user) {
-      console.error(`[getUserProfile] Usuário com ID ${userIdToFetch} não encontrado no banco de dados.`);
       return res.status(404).json({ message: 'Usuário não encontrado.' });
     }
 
-    console.log(`[getUserProfile] Perfil encontrado para ${user.email}, papel: ${user.role}`);
     res.status(200).json({ user });
   } catch (error) {
     console.error('Erro ao obter perfil do usuário:', error);
@@ -166,37 +113,29 @@ export const getUserProfile = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * Atualiza o perfil de um usuário.
- * Usuário comum: só pode atualizar o próprio perfil (email, password).
- * Admin: pode atualizar qualquer perfil (email, password, role).
- */
 export const updateUserProfile = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params; // ID do usuário a ser atualizado
-    const requestingUserId = req.userId; // ID do usuário que fez a requisição
-    const requestingUserRole = req.role; // Papel do usuário que fez a requisição
+    const { id } = req.params;
+    const requestingUserId = req.userId;
+    const requestingUserRole = req.role;
 
-    // Garante que requestingUserId não é undefined
     if (!requestingUserId) {
-        return res.status(401).json({ message: 'Não autorizado: Usuário não identificado.' });
+      return res.status(401).json({ message: 'Não autorizado: Usuário não identificado.' });
     }
 
-    let userIdToUpdate = id;
-
-    // Usuário comum só pode atualizar o próprio perfil
-    if (requestingUserRole === Role.USER && userIdToUpdate !== requestingUserId) {
+    if (requestingUserRole === Role.USER && id !== requestingUserId) {
       return res.status(403).json({ message: 'Acesso negado: Você só pode atualizar seu próprio perfil.' });
     }
 
-    const { email, password, role } = req.body; // Campos a serem atualizados
+    const { email, password, role } = req.body;
 
     const dataToUpdate: any = {};
-    if (email !== undefined) { 
+
+    if (email !== undefined) {
       try {
-        registerSchema.shape.email.parse(email); // Valida formato do email
+        registerSchema.shape.email.parse(email);
         const existingUserWithEmail = await prisma.user.findUnique({ where: { email } });
-        if (existingUserWithEmail && existingUserWithEmail.id !== userIdToUpdate) {
+        if (existingUserWithEmail && existingUserWithEmail.id !== id) {
           return res.status(409).json({ message: 'Este e-mail já está em uso por outro usuário.' });
         }
         dataToUpdate.email = email;
@@ -207,9 +146,10 @@ export const updateUserProfile = async (req: Request, res: Response) => {
         throw error;
       }
     }
+
     if (password !== undefined) {
       try {
-        registerSchema.shape.password.parse(password); // Valida força da senha
+        registerSchema.shape.password.parse(password);
         dataToUpdate.password = await bcrypt.hash(password, 10);
       } catch (error) {
         if (error instanceof ZodError) {
@@ -218,7 +158,7 @@ export const updateUserProfile = async (req: Request, res: Response) => {
         throw error;
       }
     }
-    // Permite que o admin atualize o papel
+
     if (requestingUserRole === Role.ADMIN && role !== undefined) {
       if (!Object.values(Role).includes(role)) {
         return res.status(400).json({ message: 'Papel inválido fornecido.' });
@@ -231,7 +171,7 @@ export const updateUserProfile = async (req: Request, res: Response) => {
     }
 
     const updatedUser = await prisma.user.update({
-      where: { id: userIdToUpdate },
+      where: { id },
       data: dataToUpdate,
       select: { id: true, email: true, role: true, createdAt: true, updatedAt: true },
     });
@@ -246,10 +186,6 @@ export const updateUserProfile = async (req: Request, res: Response) => {
   }
 };
 
-
-/**
- * Deleta um usuário. (Apenas Admin pode deletar qualquer usuário)
- */
 export const deleteUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -264,7 +200,7 @@ export const deleteUser = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Usuário não encontrado para exclusão.' });
     }
 
-    if (req.userId === id) { // Evita que o admin se auto-delete
+    if (req.userId === id) {
       return res.status(400).json({ message: 'Você não pode deletar seu próprio usuário através desta rota.' });
     }
 
@@ -272,7 +208,7 @@ export const deleteUser = async (req: Request, res: Response) => {
 
     res.status(200).json({ message: 'Usuário deletado com sucesso!' });
   } catch (error: any) {
-    if (error.code === 'P2003') { // Foreign key constraint failed
+    if (error.code === 'P2003') {
       return res.status(400).json({ message: 'Não é possível deletar o usuário devido a reservas ou eventos associados.' });
     }
     console.error('Erro ao deletar usuário:', error);
@@ -280,9 +216,6 @@ export const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * Lista todos os usuários. (Apenas Admin)
- */
 export const listUsers = async (req: Request, res: Response) => {
   try {
     if (req.role !== Role.ADMIN) {
