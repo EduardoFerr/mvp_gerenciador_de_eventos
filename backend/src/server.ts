@@ -12,14 +12,17 @@ import apiRoutes from './routes'; // Importa o index de rotas
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT;
 
 // Inicializa o cliente Prisma
 export const prisma = new PrismaClient();
 
 // Middlewares
 // Habilita o CORS para permitir requisições de diferentes origens (frontend).
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  credentials: true, // Se quiser usar cookies no futuro
+}));
 // Habilita o parsing de JSON para requisições com corpo JSON.
 app.use(express.json());
 

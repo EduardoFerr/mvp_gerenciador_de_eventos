@@ -4,14 +4,13 @@
 // Define o provedor do banco de dados (PostgreSQL neste caso).
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL") // A URL de conexão é obtida de uma variável de ambiente.
+  url      = env("DATABASE_URL")
 }
 
 // Define o gerador do cliente Prisma.
 // O 'output' especifica onde o cliente Prisma será gerado.
 generator client {
   provider = "prisma-client-js"
-  output   = "../node_modules/.prisma/client" // CORREÇÃO: Alterado para um subdiretório seguro.
 }
 
 // Modelo para a entidade User (Usuário)
