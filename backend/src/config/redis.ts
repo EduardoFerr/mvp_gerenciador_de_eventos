@@ -7,6 +7,10 @@ const redisUrl = process.env.REDIS_URL;
 
 export const redisClient = createClient({
     url: redisUrl,
+    socket: {
+        tls: true,
+        rejectUnauthorized: false, 
+    },
 });
 
 redisClient.on('error', (err) => console.error('Erro na conexão com o Redis:', err));

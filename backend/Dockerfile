@@ -1,3 +1,5 @@
+# backend/Dockerfile
+
 FROM node:20
 
 WORKDIR /app
@@ -10,6 +12,4 @@ RUN npx prisma generate
 
 ENV NODE_ENV=production
 
-RUN chmod +x entrypoint.sh
-
-ENTRYPOINT ["sh", "./entrypoint.sh"]
+CMD ["node", "dist/server.js"]
