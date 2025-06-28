@@ -18,31 +18,31 @@ module.exports = {
     },
     extend: {
       colors: {
-        border: "hsl(210 20% 90%)",          // Borda mais suave e flat
-        input: "hsl(210 20% 95%)",           // Fundo de input mais claro e flat
-        ring: "hsl(215 20% 50%)",            // Cor para anéis de foco, neutra e sólida
-        background: "hsl(0 0% 100%)",        // Fundo principal branco sólido
+        border: "hsl(210 20% 90%)",          
+        input: "hsl(210 20% 95%)",           
+        ring: "hsl(215 20% 50%)",            
+        background: "hsl(0 0% 100%)",        
         foreground: "hsl(222.2 47.4% 11.2%)", // Texto principal quase preto
 
         primary: {
-          DEFAULT: "hsl(220 70% 30%)",       // Um azul escuro/médio, sólido e flat
-          foreground: "hsl(0 0% 100%)",      // Texto branco para primário
+          DEFAULT: "hsl(220 70% 30%)",       // Azul escuro/médio
+          foreground: "hsl(0 0% 100%)",      // <--- CORREÇÃO: Texto BRANCO para contraste com primary escuro
         },
         secondary: {
-          DEFAULT: "hsl(210 40% 90%)",       // Cinza claro, sólido e flat
-          foreground: "hsl(222.2 47.4% 11.2%)", // Texto escuro para secundário
+          DEFAULT: "hsl(210 40% 90%)",       // Cinza claro
+          foreground: "hsl(222.2 47.4% 11.2%)", // <--- CORREÇÃO: Texto ESCURO para contraste com secondary claro
         },
         destructive: {
-          DEFAULT: "hsl(0 80% 50%)",         // Vermelho sólido e flat
-          foreground: "hsl(0 0% 100%)",      // Texto branco para destrutivo
+          DEFAULT: "hsl(0 80% 50%)",         
+          foreground: "hsl(0 0% 100%)",      
         },
         muted: {
           DEFAULT: "hsl(210 40% 96.1%)",
-          foreground: "hsl(215.4 16.3% 46.9%)",
+          foreground: "hsl(215.4 16.3% 46.9%)", // Cor de texto para elementos secundários (cinza médio)
         },
         accent: {
-          DEFAULT: "hsl(210 40% 90%)",
-          foreground: "hsl(222.2 47.4% 11.2%)",
+          DEFAULT: "hsl(210 40% 90%)",       // Destaque (cinza claro)
+          foreground: "hsl(222.2 47.4% 11.2%)", // <--- CORREÇÃO: Texto ESCURO para contraste com accent claro
         },
         popover: {
           DEFAULT: "hsl(0 0% 100%)",
@@ -54,9 +54,9 @@ module.exports = {
         },
       },
       borderRadius: {
-        lg: `0.25rem`, // 4px (padrão 0.5rem ou 8px)
-        md: `0.125rem`, // 2px
-        sm: `0.0625rem`, // 1px (quase sem arredondamento)
+        lg: `0.25rem`,
+        md: `0.125rem`,
+        sm: `0.0625rem`,
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],

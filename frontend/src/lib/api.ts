@@ -5,7 +5,7 @@ import Cookies from 'js-cookie'; // Importa a biblioteca js-cookie para gerencia
 
 // Obtém a URL base da API do backend a partir das variáveis de ambiente.
 // `NEXT_PUBLIC_API_URL` é definida em `next.config.js` e `.env.local`.
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface RequestOptions extends RequestInit {
   // Define uma interface para as opções de requisição, estendendo as opções padrão do Fetch API.
@@ -23,6 +23,7 @@ interface RequestOptions extends RequestInit {
 export async function apiFetch<T>(endpoint: string, options?: RequestOptions): Promise<T> {
   // Constrói a URL completa da requisição.
   const url = `${API_URL}${endpoint}`;
+  console.log(`Requisição para: ${url}`, options);
 
   // Obtém o token JWT do cookie, se existir.
   const token = options?.token || Cookies.get('token');
