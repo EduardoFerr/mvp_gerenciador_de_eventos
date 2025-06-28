@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import { generateToken } from '../config/jwt';
 import { registerSchema, loginSchema } from '../validation/schemas';
 import { ZodError } from 'zod';
-import { prisma } from '../server';
+import { prisma } from '../services/prisma';
 
 export const registerUser = async (req: Request, res: Response) => {
   try {

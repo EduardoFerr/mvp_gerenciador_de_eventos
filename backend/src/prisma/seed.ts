@@ -7,9 +7,9 @@ async function main() {
   console.log('Iniciando o seeding do banco de dados...');
 
   // Limpa dados
-  // await prisma.reservation.deleteMany();
-  // await prisma.event.deleteMany();
-  // await prisma.user.deleteMany();
+  await prisma.reservation.deleteMany();
+  await prisma.event.deleteMany();
+  await prisma.user.deleteMany();
 
   const hashedPassword = await bcrypt.hash('password123', 10);
 

@@ -2,22 +2,22 @@ COMPOSE=docker-compose.yml
 OVERRIDE=docker-compose.override.yml
 
 up:
-	docker compose -f $(COMPOSE) -f $(OVERRIDE) build --build-arg BUILD_DATE=$(shell date +%Y%m%d%H%M%S) backend
-	docker compose -f $(COMPOSE) -f $(OVERRIDE) build frontend
-	docker compose -f $(COMPOSE) -f $(OVERRIDE) up --force-recreate
+	docker compose -f $(COMPOSE) build --build-arg BUILD_DATE=$(shell date +%Y%m%d%H%M%S) backend
+	docker compose -f $(COMPOSE) build frontend
+	docker compose -f $(COMPOSE) up --force-recreate
 
 up-no-cache:
-	docker compose -f $(COMPOSE) -f $(OVERRIDE) build --no-cache --build-arg BUILD_DATE=$(shell date +%Y%m%d%H%M%S) backend
-	docker compose -f $(COMPOSE) -f $(OVERRIDE) build --no-cache frontend
-	docker compose -f $(COMPOSE) -f $(OVERRIDE) up --force-recreate
+	docker compose -f $(COMPOSE) build --no-cache --build-arg BUILD_DATE=$(shell date +%Y%m%d%H%M%S) backend
+	docker compose -f $(COMPOSE) build --no-cache frontend
+	docker compose -f $(COMPOSE) up --force-recreate
 
 down:
 	docker compose down
 
 rmi:
-	docker compose -f $(COMPOSE) -f $(OVERRIDE) down --rmi all --volumes --remove-orphans
+	docker compose -f $(COMPOSE) down --rmi all --volumes --remove-orphans
 rm:
-	docker compose -f $(COMPOSE) -f $(OVERRIDE) down --remove-orphans
+	docker compose -f $(COMPOSE) down --remove-orphans
 logs:
 	docker compose logs -f
 
@@ -71,3 +71,9 @@ test-reservations:
 	echo "Requisição para /reservations/my-reservations..."; \
 	curl -s -H "Authorization: Bearer $$TOKEN" \
 		http://localhost:3001/api/reservations/my-reservations | jq
+
+# deploy-vercel:
+# 	@echo "Iniciando deploy no Vercel..."
+# 	cd ../frontend && vercel deploy --prod
+# 	@echo "Deploy concluído. Verifique o status no painel do Vercel."
+

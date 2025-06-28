@@ -1,105 +1,71 @@
-// backend/src/server.ts
-// Ponto de entrada da aplicação backend (servidor Express).
-
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from './services/prisma';
 import { redisClient } from './config/redis';
-import apiRoutes from './routes'; // Importa o index de rotas
+import apiRoutes from './routes';
+import { errorHandler } from './middlewares/errorHandler';
 
-// Carrega as variáveis de ambiente do arquivo .env
 dotenv.config();
 
-const app = express();
 const port = process.env.PORT;
+const origin = process.env.FRONTEND_URL;
 
-// Inicializa o cliente Prisma
-export const prisma = new PrismaClient();
+if (!port) {
+  console.error('PORT não definida no .env');
+  process.exit(1);
+}
+
+const app = express();
 
 // Middlewares
-// Habilita o CORS para permitir requisições de diferentes origens (frontend).
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-  credentials: true, // Se quiser usar cookies no futuro
-}));
-// Habilita o parsing de JSON para requisições com corpo JSON.
+app.use(cors({ origin, credentials: true }));
 app.use(express.json());
 
-// Middleware para testar a conexão com o banco de dados e Redis
-app.get('/health', async (req: Request, res: Response) => {
-  try {
-    // Testa a conexão com o PostgreSQL
-    await prisma.$queryRaw`SELECT 1`;
-    // Testa a conexão com o Redis
-    await redisClient.ping();
-    res.status(200).json({ message: 'Serviços de backend e banco de dados estão saudáveis!' });
-  } catch (error) {
-    console.error('Erro na verificação de saúde:', error);
-    res.status(500).json({ message: 'Erro na verificação de saúde dos serviços.' });
-  }
-});
-
-// Rotas da API
-// Todas as rotas definidas em './routes/index.ts' serão prefixadas com '/api'.
+// Rotas
 app.use('/api', apiRoutes);
 
-// Middleware de tratamento de erros global
-// Este middleware captura e processa erros que ocorrem nas rotas e outros middlewares.
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error('Erro detectado no middleware de erros:', err.stack); // Loga o stack trace do erro.
-  if (err.name === 'UnauthorizedError') {
-    // Erro de autenticação JWT
-    return res.status(401).json({ message: 'Não autorizado: Token inválido ou ausente.' });
+// Tratamento global de erros
+app.use(errorHandler);
+
+// Inicialização
+async function startServer() {
+  try {
+    console.log('Conectando ao Redis...');
+    await redisClient.connect();
+    console.log('Redis conectado!');
+
+    app.listen(port, () => {
+      console.log(`Servidor rodando na porta ${port}`);
+    });
+  } catch (err) {
+    console.error('Erro crítico ao iniciar o servidor:', err);
+    await gracefulShutdown();
+    process.exit(1);
   }
-  // Para outros tipos de erros, envia uma resposta de erro genérica.
-  res.status(500).json({ message: 'Ocorreu um erro interno no servidor.', error: err.message });
-});
+}
 
-// CAPTURA GLOBAL DE EXCEÇÕES E REJEIÇÕES DE PROMISE
-// Isso é crucial para depurar crashes que não são capturados por middlewares específicos.
-process.on('uncaughtException', (err: Error) => {
-  console.error('ERRO FATAL: Exceção não capturada! O servidor será encerrado.');
-  console.error(err.stack);
-  // É uma boa prática encerrar o processo após uma exceção não capturada,
-  // pois o aplicativo pode estar em um estado inconsistente.
-  process.exit(1); 
-});
+// Encerramento seguro
+async function gracefulShutdown() {
+  console.log('Encerrando serviços...');
+  await prisma.$disconnect();
+  await redisClient.quit();
+  console.log('Serviços encerrados.');
+}
 
-process.on('unhandledRejection', (reason: any, promise: Promise<any>) => {
-  console.error('ERRO: Rejeição de Promise não tratada! O servidor será encerrado.');
-  console.error('Motivo:', reason);
-  promise.catch(err => console.error('Erro da Promise:', err.stack)); // Loga o stack trace se houver.
-  // Encerrar o processo para rejeições não tratadas também é recomendado.
+// Tratamento de falhas críticas
+process.on('uncaughtException', async (err) => {
+  console.error('Exceção não capturada:', err);
+  await gracefulShutdown();
   process.exit(1);
 });
 
-
-// Inicia o servidor Express
-app.listen(port, async () => {
-  console.log(`Servidor backend rodando na porta ${port}`);
-  console.log('Conectando ao Redis...');
-  try {
-    await redisClient.connect(); // Conecta ao Redis
-    console.log('Conectado ao Redis!');
-  } catch (error) {
-    console.error('Erro ao conectar ao Redis:', error);
-  }
-
-  // Conecta ao banco de dados Prisma (automaticamente gerado pelo cliente)
-  // O Prisma faz lazy connection, então esta linha apenas indica que o cliente está pronto.
-  // A conexão real acontece na primeira requisição ao banco.
-  console.log('Prisma pronto para conectar ao banco de dados...');
+process.on('unhandledRejection', async (reason) => {
+  console.error('Rejeição de Promise não tratada:', reason);
+  await gracefulShutdown();
+  process.exit(1);
 });
 
-// Desconecta o Prisma e o Redis antes de o processo ser encerrado
-process.on('beforeExit', async () => {
-  console.log('Desconectando Prisma...');
-  await prisma.$disconnect();
-  console.log('Prisma desconectado.');
+process.on('beforeExit', gracefulShutdown);
 
-  console.log('Desconectando Redis...');
-  await redisClient.quit();
-  console.log('Redis desconectado.');
-});
-
+startServer();
