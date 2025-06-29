@@ -2,6 +2,7 @@
 
 Este é o serviço de backend (API RESTful) para o Sistema de Gerenciamento de Eventos com Reservas. Ele é responsável por toda a lógica de negócios, autenticação, gerenciamento de dados e interação com o banco de dados PostgreSQL e o cache Redis.
 
+## 🌍 Links de Produção (Demo)
 
 - Backend (Heroku): https://emsr-backend-24afa39be4e1.herokuapp.com/api/health
 - Repositório: https://github.com/EduardoFerr/mvp_gerenciador_de_eventos/tree/master/backend
