@@ -1,98 +1,130 @@
-Frontend do Sistema de Gerenciamento de Eventos
-Esta é a aplicação web frontend para o Sistema de Gerenciamento de Eventos com Reservas. Ela é construída com Next.js e React, consumindo a API RESTful do backend.
+# 💡 Frontend do Sistema de Gerenciamento de Eventos
 
-🚀 Tecnologias
-Framework: Next.js (React Framework)
+Esta é a aplicação web frontend para o Sistema de Gerenciamento de Eventos com Reservas.\
+Ela é construída com **Next.js e React**, consumindo a API RESTful do backend.
 
-Linguagem: TypeScript
+## 🌍 Links de Produção (Demo)
 
-Estilização: Tailwind CSS
+- Frontend (Vercel): https://frontend-emsr.vercel.app
+- Repositório: https://github.com/EduardoFerr/mvp_gerenciador_de_eventos/tree/master/frontend
 
-Gerenciamento de Estado: React Context API (para autenticação)
+---
 
-Navegação: Next.js App Router
+## 🚀 Tecnologias
 
-✨ Funcionalidades
-Páginas de Login e Registro de Usuários.
+- **Framework:** Next.js (React)
+- **Linguagem:** TypeScript
+- **Estilização:** Tailwind CSS
+- **Ícones:** Lucide React
+- **Gerenciamento de Estado:** React Context API (autenticação)
+- **Navegação:** Next.js App Router
 
-Listagem de todos os eventos com filtros por nome e data.
+---
 
-Página de detalhes do evento, mostrando vagas disponíveis e opção de reserva (se autenticado como USER).
+## ✨ Funcionalidades
 
-Página "Minhas Reservas" para usuários autenticados verem e cancelarem suas reservas.
+- Login e Registro de Usuários
+- Listagem de Eventos com filtros (nome, data)
+- Detalhes de Evento com reservas
+- Página "Minhas Reservas"
+- **Painel ADMIN:**
+  - CRUD de eventos
+  - Visualização de reservas
+- Design responsivo
+- Feedback claro (sucesso, erro, carregamento)
+- Integração total com API REST
 
-Painel de Administração (acessível apenas para ADMIN):
+---
 
-Criação, edição e exclusão de eventos.
+## 📁 Estrutura de Pastas
 
-Visualização de todas as reservas no sistema.
-
-Design responsivo para diferentes tamanhos de tela.
-
-Feedback visual claro para ações (sucesso, erro, carregamento).
-
-📦 Estrutura de Pastas
+```
 frontend/
-├── Dockerfile                  # Define como o contêiner Docker do frontend é construído.
-├── package.json                # Dependências e scripts do Next.js.
-├── tsconfig.json               # Configurações do TypeScript.
-├── next.config.js              # Configurações do Next.js.
-├── tailwind.config.js          # Configurações do Tailwind CSS.
-├── .env.example                # Variáveis de ambiente de exemplo.
-├── .env.local                  # Variáveis de ambiente locais (para a URL da API).
-├── public/                     # Ativos estáticos (imagens, favicons, etc.).
-├── src/                        # Código fonte principal da aplicação.
-│   ├── app/                    # Páginas e layout do Next.js (App Router).
-│   │   ├── (auth)/             # Páginas de autenticação (login, register).
-│   │   ├── admin/              # Páginas do painel de administração.
-│   │   ├── events/             # Páginas de listagem e detalhes de eventos.
-│   │   ├── my-reservations/    # Página de reservas do usuário.
+├── Dockerfile
+├── package.json
+├── tsconfig.json
+├── next.config.js
+├── tailwind.config.js
+├── .env.example
+├── .env.local
+├── public/
+├── src/
+│   ├── app/
+│   │   ├── (auth)/           # Login e Registro
+│   │   ├── admin/            # Admin Panel
+│   │   ├── events/           # Eventos (lista + detalhe)
+│   │   ├── my-reservations/  # Reservas do usuário
 │   │   ├── layout.tsx
-│   │   └── page.tsx            # Página inicial (listagem de eventos).
-│   ├── components/             # Componentes React reutilizáveis (Header, EventCard, UI).
-│   │   ├── ui/                 # Componentes Shadcn/ui customizados (Button, Input).
-│   │   └── AuthContext.tsx     # Contexto para gerenciamento de autenticação.
-│   ├── lib/                    # Funções utilitárias (api.ts, cn.ts).
-│   └── styles/                 # Estilos globais (globals.css).
+│   │   └── page.tsx
+│   ├── components/
+│   │   ├── ui/               # UI Components (Button, Input, etc.)
+│   │   └── AuthContext.tsx
+│   ├── lib/                  # Funções utilitárias (api.ts, cn.ts)
+│   └── styles/               # Estilos globais (globals.css)
+└── README.md
+```
 
-🚀 Como Executar (Localmente via Docker Compose)
-Para rodar o frontend localmente, é necessário que o backend e os bancos de dados estejam funcionando via Docker Compose. Siga as instruções no README do Projeto Raiz.
+---
 
-Variáveis de Ambiente (.env.local)
-O frontend espera a seguinte variável de ambiente no arquivo .env.local (na pasta frontend):
+## ⚙️ Como Executar (Local via Docker Compose)
 
-NEXT_PUBLIC_API_URL: A URL base da sua API backend (ex: http://localhost:3001/api).
+É necessário que o backend + banco estejam rodando com Docker Compose.\
+Siga o `README.md` do projeto principal.
 
-🌐 Deploy
-Este frontend pode ser facilmente implantado em plataformas como o Vercel.
+---
 
-Deploy no Vercel
-Instale o Vercel CLI:
+## 🛠️ Variáveis de Ambiente (.env.local)
 
+O frontend requer:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3001/api
+```
+
+---
+
+## ☁️ Deploy no Vercel
+
+### Passo a passo:
+
+1. Instale o Vercel CLI:
+
+```bash
 npm i -g vercel
+```
 
-Faça login no Vercel:
+2. Faça login:
 
+```bash
 vercel login
+```
 
-Navegue até a pasta frontend do seu projeto:
+3. Navegue até a pasta frontend:
 
+```bash
 cd frontend
+```
 
-Ligue o projeto Vercel ao seu diretório local:
+4. Link com o projeto Vercel:
 
+```bash
 vercel link
+```
 
-Siga as instruções para criar um novo projeto Vercel.
+5. Configure a URL da API backend:
 
-Adicione a URL do seu backend como uma variável de ambiente no Vercel. Certifique-se de usar a URL pública do seu backend (ex: do Fly.io).
-
+```bash
 vercel env add NEXT_PUBLIC_API_URL production
+# Exemplo: https://seu-backend.herokuapp.com/api
+```
 
-Quando solicitado, cole a URL completa do seu backend Fly.io (ex: https://seu-backend.fly.dev/api).
+6. Deploy:
 
-Realize o deploy:
-
+```bash
 vercel deploy --prod
+```
 
-O Vercel construirá e implantará sua aplicação, fornecendo uma URL pública ao final.
+---
+
+Após isso, o Vercel fornecerá uma **URL pública** com a aplicação em produção.
+

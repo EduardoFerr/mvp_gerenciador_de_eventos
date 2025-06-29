@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '../config/jwt';
-import { prisma } from '../server'; 
+import { prisma } from '../services/prisma'; // CERTO
 import { Role } from '@prisma/client';
 
 /**

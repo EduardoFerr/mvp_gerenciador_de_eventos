@@ -1,4 +1,3 @@
-// frontend/src/app/admin/events/page.tsx
 
 "use client"; 
 
@@ -317,16 +316,6 @@ const AdminEventsPage: React.FC = () => {
                 </div>
                 <div>
                   <label htmlFor="eventDate" className="block text-sm font-medium text-foreground mb-1">Data e Hora do Evento</label>
-                  <Input
-                    id="eventDate"
-                    type="datetime-local"
-                    value={currentEvent?.eventDate || ''}
-                    onChange={(e) => setCurrentEvent({ ...currentEvent, eventDate: e.target.value })}
-                    required
-                  />
-                </div>
-                <div>
-                  <label htmlFor="maxCapacity" className="block text-sm font-medium text-foreground mb-1">Capacidade Máxima</label>
                   <Input
                     id="maxCapacity"
                     type="number"

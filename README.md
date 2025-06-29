@@ -1,184 +1,201 @@
-# Sistema de Gerenciamento de Eventos com Reservas
+# 🎟️ Sistema de Gerenciamento de Eventos com Reservas
 
-Este é um sistema full-stack de gerenciamento de eventos que permite que administradores criem e gerenciem eventos, e usuários comuns se registrem, visualizem eventos e reservem vagas. A aplicação é construída com:
 
-* **Backend:** Node.js (Express.js, TypeScript, Prisma, PostgreSQL, Redis)
-* **Frontend:** Next.js (React, TypeScript, Tailwind CSS)
+Este é um sistema full-stack de gerenciamento de eventos que permite que **administradores** criem e gerenciem eventos, enquanto **usuários comuns** podem visualizar e reservar vagas.  
+
+## 🌍 Links de Produção (Demo)
+
+- Frontend (Vercel): https://frontend-emsr.vercel.app
+- Backend (Heroku): https://emsr-backend-24afa39be4e1.herokuapp.com/api/health
+- Repositório: github.com/EduardoFerr/mvp_gerenciador_de_eventos/tree/main
 
 ---
 
 ## 🚀 Tecnologias Utilizadas
 
-### Orquestração:
+### 🐳 Orquestração:
+- Docker
+- Docker Compose
 
-* Docker
-* Docker Compose
+### 🔧 Backend:
+- Node.js + Express.js
+- TypeScript
+- Prisma ORM
+- PostgreSQL (Local: Docker | Deploy: Neon.tech)
+- Redis (Local: Docker | Deploy: Upstash)
+- JWT (Autenticação)
+- Zod (Validação)
 
-### Backend:
-
-* Node.js, Express.js
-* TypeScript
-* Prisma ORM
-* PostgreSQL (Banco de Dados)
-* Redis (Cache)
-* JWT (Autenticação)
-* Zod (Validação)
-
-### Frontend:
-
-* Next.js (React Framework)
-* TypeScript
-* Tailwind CSS
+### 🎨 Frontend:
+- Next.js (React)
+- TypeScript
+- Tailwind CSS
+- Lucide React (Ícones)
 
 ---
 
-## 📦 Estrutura do Projeto
-
-```
-.
-├── docker-compose.yml         # Define os serviços Docker (DB, Redis, Backend, Frontend)
-├── backend/                   # Diretório da aplicação Backend
-│   ├── Dockerfile
-│   ├── package.json
-│   ├── prisma/                # Schema do Prisma e Migrações
-│   ├── src/                   # Código fonte da API
-│   ├── .env.example
-│   └── ...
-├── frontend/                  # Diretório da aplicação Frontend
-│   ├── Dockerfile
-│   ├── package.json
-│   ├── public/                # Ativos estáticos do Next.js
-│   ├── src/                   # Código fonte da aplicação React
-│   ├── .env.example
-│   └── ...
-├── README.md                  # Este arquivo
-└── .gitignore
-```
-
----
-
-## ⚙️ Configuração e Execução (Ambiente de Desenvolvimento)
-
-### Passo 1: Clone o Repositório
+## 📁 Estrutura do Projeto
 
 ```bash
-git clone <URL_DO_SEU_REPOSITORIO>
-cd <nome_da_pasta_do_projeto>
+.
+├── docker-compose.yml         # Define os serviços Docker
+├── backend/                   # Backend Express API
+│   ├── Dockerfile             
+│   ├── Procfile               
+│   ├── package.json
+│   ├── prisma/                
+│   ├── src/                   
+│   ├── .env.example           
+│   ├── .dockerignore          
+│   ├── entrypoint.sh          
+│   └── ...
+├── frontend/                  # Frontend Next.js
+│   ├── Dockerfile             
+│   ├── package.json
+│   ├── public/                
+│   ├── src/                   
+│   ├── .env.example
+│   ├── .env.local             
+│   ├── .gitignore             
+│   ├── next.config.js         
+│   ├── tailwind.config.js     
+│   ├── tsconfig.json          
+│   └── ...
+├── README.md                  
+├── .gitignore                 
+└── Makefile                   # Comandos úteis
 ```
 
-### Passo 2: Configurar Variáveis de Ambiente
+---
 
-#### Para o Backend:
+## ⚙️ Configuração e Execução (Local)
+
+### 🔁 1. Clone o repositório
+
+```bash
+git clone https://github.com/EduardoFerr/mvp_gerenciador_de_eventos.git
+cd mvp_gerenciador_de_eventos
+```
+
+---
+
+### 🔑 2. Configurar variáveis de ambiente
+
+#### Backend:
 
 ```bash
 cd backend
 cp .env.example .env
-```
-
-Edite `.env` e substitua a chave JWT por algo seguro. Mantenha `DATABASE_URL` e `REDIS_URL` como estão.
-
-```bash
+# Edite o arquivo:
+# - DATABASE_URL: postgresql://user:password@db:5432/event_management_db?schema=public
+# - REDIS_URL: redis://redis:6379
+# - JWT_SECRET: (use openssl rand -base64 32)
 cd ..
 ```
 
-#### Para o Frontend:
+#### Frontend:
 
 ```bash
 cd frontend
 cp .env.example .env.local
-```
-
-Edite `.env.local` e certifique-se de que:
-
-```env
-NEXT_PUBLIC_API_URL="http://localhost:3001/api"
-```
-
-```bash
+# NEXT_PUBLIC_API_URL=http://localhost:3001/api
 cd ..
 ```
 
-### Passo 3: Gerar Migrações do Prisma (localmente)
+---
+
+### 🔨 3. Gerar Migrações do Prisma
 
 ```bash
 cd backend
 npm install
-npx prisma migrate dev --name init_database_schema
+npx prisma migrate dev --name initial_schema_setup
 cd ..
 ```
 
-### Passo 4: Levantar o Ambiente Docker
+---
+
+### 🐳 4. Levantar os contêineres com Docker
 
 ```bash
-docker compose up -d --build
+make up-no-cache
 ```
 
-### Passo 5: Aplicar Migrações e Executar Seed no Container
+---
 
-```bash
-docker compose exec backend bash
-npx prisma migrate deploy
-npm run prisma:seed
-exit
-```
+### 🌐 5. Acessar a Aplicação
 
-### Passo 6: Acessar a Aplicação
+Abra no navegador:  
+👉 http://localhost:3000  
+**Dica:** Limpe cookies e cache (Ctrl+F5)
 
-Abra o navegador:
+---
 
-```
-http://localhost:3000
-```
+### 🔐 Credenciais de Teste
 
-#### Credenciais de Teste:
+**Admin:**  
+- E-mail: `admin@admin.com`  
+- Senha: `password123`
 
-**Administrador**
-
-* E-mail: `admin@admin.com`
-* Senha: `password123`
-
-**Usuário Comum**
-
-* E-mail: `user@teste.com`
-* Senha: `password123`
+**Usuário comum:**  
+- E-mail: `user1@teste.com`  
+- Senha: `password123`
 
 ---
 
 ## 🧹 Limpeza
 
+Para remover tudo e resetar:
+
 ```bash
-docker compose down --volumes
+make rmi
 ```
 
 ---
 
-## ⚠️ Solução de Problemas Comuns
+## ☁️ Deploy na Nuvem (Heroku & Vercel)
 
-### Erro: P1001 - Can't reach database server at db:5432
+### ✅ Pré-requisitos
 
-* Verifique se o Docker está rodando
-* Veja se a porta 5432 está em uso (troque para 5433:5432, se necessário)
-* Execute `npx prisma migrate dev` com Docker DB rodando
-
-### Contêiner backend reiniciando
-
-* Pode ser problema na ordem de inicialização
-* Solução: `docker compose down --volumes && docker rmi $(docker images -aq) && docker compose up -d --build`
-
-### Prisma Schema não encontrado no Dockerfile
-
-* Certifique-se de que o Dockerfile copia a pasta `prisma` antes da instalação
-
-### Erros no frontend (React.Children.only etc)
-
-* Atualize os arquivos do frontend
-* Limpe o cache do navegador (Ctrl+F5)
-
-### Admin desloga após atualizar
-
-* Motivo: seed gera novos IDs; cookies ficam inválidos
-* Solução: limpar cookies e logar novamente após `docker compose down --volumes`
+- Heroku CLI + conta
+- Vercel CLI + conta
+- Conta Neon.tech (PostgreSQL)
+- Conta Upstash (Redis)
 
 ---
 
-> Qualquer dúvida, verifique os logs com `docker compose logs -f backend` ou `frontend` ou `db`.
+### 🚀 Backend (Heroku)
+
+```bash
+cd backend
+heroku create seu-nome-do-app-backend-unico
+
+heroku config:set \
+  DATABASE_URL="<NEON_URL>" \
+  REDIS_URL="<UPSTASH_URL>" \
+  JWT_SECRET="<SEGREDO>" \
+  NODE_ENV="production" \
+  NPM_CONFIG_PRODUCTION=false
+
+git push heroku main
+
+# Após o deploy:
+heroku run npm run prisma:seed -a seu-nome-do-app-backend-unico
+```
+
+---
+
+### 🚀 Frontend (Vercel)
+
+```bash
+cd frontend
+vercel link
+
+vercel env add NEXT_PUBLIC_API_URL production
+# Informe a URL do Heroku (ex: https://seu-backend.herokuapp.com/api)
+
+vercel deploy --prod
+```
+
+---
+

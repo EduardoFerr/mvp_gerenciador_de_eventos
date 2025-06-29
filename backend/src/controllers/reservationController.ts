@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { PrismaClient, ReservationStatus, Role, Prisma } from '@prisma/client'; 
 import { reservationSchema, updateReservationStatusSchema } from '../validation/schemas';
 import { ZodError } from 'zod';
-import { prisma } from '../server'; 
+import { prisma } from '../services/prisma';
 import { redisClient } from '../config/redis'; 
 
 const EVENT_CACHE_PREFIX = 'event:';
