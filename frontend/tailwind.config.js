@@ -1,4 +1,3 @@
-// frontend/tailwind.config.js
 const { fontFamily } = require("tailwindcss/defaultTheme")
 
 /** @type {import('tailwindcss').Config} */
@@ -22,15 +21,15 @@ module.exports = {
         input: "hsl(210 20% 95%)",           
         ring: "hsl(215 20% 50%)",            
         background: "hsl(0 0% 100%)",        
-        foreground: "hsl(222.2 47.4% 11.2%)", // Texto principal quase preto
+        foreground: "hsl(222.2 47.4% 11.2%)", 
 
         primary: {
-          DEFAULT: "hsl(220 70% 30%)",       // Azul escuro/médio
-          foreground: "hsl(0 0% 100%)",      // <--- CORREÇÃO: Texto BRANCO para contraste com primary escuro
+          DEFAULT: "hsl(220 70% 30%)",       
+          foreground: "hsl(0 0% 100%)",      
         },
         secondary: {
-          DEFAULT: "hsl(210 40% 90%)",       // Cinza claro
-          foreground: "hsl(222.2 47.4% 11.2%)", // <--- CORREÇÃO: Texto ESCURO para contraste com secondary claro
+          DEFAULT: "hsl(210 40% 90%)",       
+          foreground: "hsl(222.2 47.4% 11.2%)", 
         },
         destructive: {
           DEFAULT: "hsl(0 80% 50%)",         
@@ -38,11 +37,11 @@ module.exports = {
         },
         muted: {
           DEFAULT: "hsl(210 40% 96.1%)",
-          foreground: "hsl(215.4 16.3% 46.9%)", // Cor de texto para elementos secundários (cinza médio)
+          foreground: "hsl(215.4 16.3% 46.9%)", 
         },
         accent: {
-          DEFAULT: "hsl(210 40% 90%)",       // Destaque (cinza claro)
-          foreground: "hsl(222.2 47.4% 11.2%)", // <--- CORREÇÃO: Texto ESCURO para contraste com accent claro
+          DEFAULT: "hsl(210 40% 90%)",       
+          foreground: "hsl(222.2 47.4% 11.2%)", 
         },
         popover: {
           DEFAULT: "hsl(0 0% 100%)",
@@ -53,10 +52,11 @@ module.exports = {
           foreground: "hsl(222.2 47.4% 11.2%)",
         },
       },
+      // Restaurando os valores padrão do Tailwind para borderRadius se você quiser mais arredondamento
       borderRadius: {
-        lg: `0.25rem`,
-        md: `0.125rem`,
-        sm: `0.0625rem`,
+        lg: `0.5rem`, // Valor padrão do Tailwind
+        md: `0.375rem`, // Valor padrão do Tailwind
+        sm: `0.25rem`, // Valor padrão do Tailwind
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],

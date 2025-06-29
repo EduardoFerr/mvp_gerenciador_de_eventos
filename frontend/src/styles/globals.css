@@ -1,45 +1,44 @@
-/* frontend/src/styles/globals.css */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
 @layer base {
   :root {
-    --background: 0 0% 100%;       
-    --foreground: 222.2 47.4% 11.2%; 
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
 
-    --muted: 210 20% 95%;         
-    --muted-foreground: 215.4 16.3% 46.9%; 
+    --muted: 210 20% 95%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --popover: 0 0% 100%;          
-    --popover-foreground: 222.2 47.4% 11.2%; 
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
 
-    --border: 210 20% 90%;          
-    --input: 210 20% 95%;           
-    --card: 0 0% 100%;             
-    --card-foreground: 222.2 47.4% 11.2%; 
+    --border: 210 20% 90%;
+    --input: 210 20% 95%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
 
-    --primary: 220 70% 30%;        
-    --primary-foreground: 0 0% 100%;       /* CORREÇÃO: Branco para contraste com primary escuro */
+    --primary: 220 70% 30%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 90%;      
-    --secondary-foreground: 222.2 47.4% 11.2%; /* CORREÇÃO: Preto para contraste com secondary claro */
+    --secondary: 210 40% 90%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --accent: 210 40% 90%;         
-    --accent-foreground: 222.2 47.4% 11.2%; /* CORREÇÃO: Preto para contraste com accent claro */
+    --accent: 210 40% 90%;
+    --accent-foreground: 222.2 47.4% 11.2%;
 
-    --destructive: 0 80% 50%;      
-    --destructive-foreground: 0 0% 100%; 
+    --destructive: 0 80% 50%;
+    --destructive-foreground: 0 0% 100%;
 
-    --ring: 215 20% 50%;           
+    --ring: 215 20% 50%;
 
-    --radius: 0.25rem;             
+    --radius: 0.25rem;
   }
 
-  /* Define um tema escuro (dark mode) */
   .dark {
-    --background: 220 70% 15%; 
+    --background: 220 70% 15%;
     --foreground: 210 40% 98%;
 
     --muted: 217.2 32.6% 17.5%;
@@ -72,8 +71,4 @@
 body {
   font-family: 'Inter', sans-serif;
   @apply bg-background text-foreground;
-}
-
-.shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl, .shadow-inner, .shadow-none {
-  box-shadow: none !important;
 }

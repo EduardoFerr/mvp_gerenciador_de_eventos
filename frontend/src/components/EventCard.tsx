@@ -1,3 +1,5 @@
+// frontend/src/components/EventCard.tsx
+
 "use client"; 
 
 import React from 'react';
@@ -65,14 +67,14 @@ const EventCard: React.FC<EventCardProps> = ({ event, onReserve, userRole, isRes
 
   return (
     <div className={cn(
-      "bg-card text-card-foreground border border-border rounded-md overflow-hidden", 
+      "bg-card text-card-foreground border border-border rounded-lg shadow-md overflow-hidden",
       "transition-transform duration-300 hover:scale-[1.02]",
       "flex flex-col",
       className
     )}>
       <div className="p-6 flex-grow">
         <h3 className="text-xl font-semibold mb-2">
-          <Link href={`/events/${event.id}`} className="hover:underline text-foreground"> 
+          <Link href={`/events/${event.id}`} className="text-xl font-semibold text-foreground"> 
             {event.name}
           </Link>
         </h3>
@@ -84,12 +86,12 @@ const EventCard: React.FC<EventCardProps> = ({ event, onReserve, userRole, isRes
 
         <div className="space-y-2 text-sm text-foreground/80">
           <div className="flex items-center gap-2">
-            <CalendarIcon className="w-4 h-4 text-primary" /> 
+            <CalendarIcon className="w-4 h-4 text-primary" />
             <span>{formattedDate} às {formattedTime}</span>
           </div>
           {event.location && (
             <div className="flex items-center gap-2">
-              <MapPinIcon className="w-4 h-4 text-primary" /> 
+              <MapPinIcon className="w-4 h-4 text-primary" />
               <span>{event.location}</span>
             </div>
           )}
@@ -112,7 +114,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onReserve, userRole, isRes
           </div>
         </div>
       </div>
-      <div className="p-6 pt-0 border-t border-border mt-4 flex items-center justify-between">
+      <div className="p-6 border-t border-border mt-4 flex items-center justify-between">
         {userRole === 'ADMIN' ? (
           <Button asChild className="w-full sm:w-auto">
             <Link href={`/admin/events`}> 

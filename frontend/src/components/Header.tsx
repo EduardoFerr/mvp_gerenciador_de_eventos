@@ -15,31 +15,31 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
 
   return (
     <header className={cn(
-      "bg-primary text-primary-foreground p-4", 
+      "bg-primary text-primary-foreground p-4 shadow-md", 
       "flex flex-col sm:flex-row justify-between items-center gap-4",
-      "rounded-b-none", 
+      "rounded-b-lg", 
       className
     )}>
       <div className="flex-shrink-0">
-        <Link href="/" className="text-2xl font-bold hover:text-foreground transition-colors duration-200"> 
+        <Link href="/" className="text-2xl font-bold hover:text-white transition-colors duration-200"> 
           Gerenciador de Eventos
         </Link>
       </div>
       <nav className="flex flex-wrap justify-center sm:justify-end items-center gap-4">
-        <Link href="/" className="hover:text-foreground transition-colors duration-200"> 
+        <Link href="/" className="hover:text-white transition-colors duration-200"> 
           Eventos
         </Link>
         {isAuthenticated && user?.role === 'USER' && (
-          <Link href="/my-reservations" className="hover:text-foreground transition-colors duration-200"> 
+          <Link href="/my-reservations" className="hover:text-white transition-colors duration-200"> 
             Minhas Reservas
           </Link>
         )}
         {isAuthenticated && user?.role === 'ADMIN' && (
           <>
-            <Link href="/admin/events" className="hover:text-foreground transition-colors duration-200"> 
+            <Link href="/admin/events" className="hover:text-white transition-colors duration-200"> 
               Gerenciar Eventos
             </Link>
-            <Link href="/admin/reservations" className="hover:text-foreground transition-colors duration-200"> 
+            <Link href="/admin/reservations" className="hover:text-white transition-colors duration-200"> 
               Ver Reservas
             </Link>
           </>
@@ -50,7 +50,7 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
             <Button asChild variant="secondary" className="px-4 py-2 rounded-md hover:bg-secondary/80">
               <Link href="/login">Login</Link>
             </Button>
-            <Button asChild variant="outline" className="px-4 py-2 rounded-md border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
+            <Button asChild variant="outline" className="px-4 py-2 rounded-md hover:bg-secondary/80 text-secondary-foreground">
               <Link href="/register">Registrar</Link>
             </Button>
           </>
@@ -60,7 +60,7 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
             <Button
               onClick={logout}
               variant="outline"
-              className="px-4 py-2 rounded-md border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+              className="px-4 py-2 rounded-md border-primary text-primary hover:bg-primary hover:text-primary-foreground"
             >
               Sair
             </Button>

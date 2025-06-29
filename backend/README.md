@@ -1,18 +1,22 @@
-# Backend do Sistema de Gerenciamento de Eventos
+# 🎯 Backend do Sistema de Gerenciamento de Eventos
 
 Este é o serviço de backend (API RESTful) para o Sistema de Gerenciamento de Eventos com Reservas. Ele é responsável por toda a lógica de negócios, autenticação, gerenciamento de dados e interação com o banco de dados PostgreSQL e o cache Redis.
+
+
+- Backend (Heroku): https://emsr-backend-24afa39be4e1.herokuapp.com/api/health
+- Repositório: https://github.com/EduardoFerr/mvp_gerenciador_de_eventos/tree/master/backend
 
 ---
 
 ## 🚀 Tecnologias
 
-* **Linguagem:** TypeScript
-* **Framework:** Node.js com Express.js
-* **ORM:** Prisma ORM
-* **Banco de Dados:** PostgreSQL
-* **Cache:** Redis
-* **Autenticação:** JWT (JSON Web Tokens)
-* **Validação:** Zod
+- **Linguagem:** TypeScript
+- **Framework:** Node.js com Express.js
+- **ORM:** Prisma ORM
+- **Banco de Dados:** PostgreSQL
+- **Cache:** Redis
+- **Autenticação:** JWT (JSON Web Tokens)
+- **Validação:** Zod
 
 ---
 
@@ -20,95 +24,94 @@ Este é o serviço de backend (API RESTful) para o Sistema de Gerenciamento de E
 
 ```
 backend/
-├── Dockerfile                  # Define como o contêiner Docker do backend é construído
-├── package.json                # Dependências e scripts do Node.js
-├── tsconfig.json               # Configurações do TypeScript
-├── .env.example                # Variáveis de ambiente de exemplo
-├── prisma/                     # Schema do banco de dados e arquivos de migração
+├── Dockerfile
+├── Procfile
+├── package.json
+├── tsconfig.json
+├── .env.example
+├── .dockerignore
+├── prisma/
 │   ├── schema.prisma
-│   ├── seed.ts                 # Script para popular o banco de dados
-│   └── migrations/             # Histórico de migrações do Prisma
-├── src/                        # Código fonte principal da aplicação
-│   ├── config/                 # Configurações (Redis, JWT)
-│   ├── middlewares/            # Middlewares (autenticação, autorização)
-│   ├── controllers/            # Lógica dos controladores (usuários, eventos, reservas)
-│   ├── routes/                 # Definição das rotas da API
-│   ├── types/                  # Tipos customizados (ex: Request do Express)
-│   ├── validation/             # Schemas de validação Zod
-│   └── server.ts               # Ponto de entrada da aplicação Express
-└── entrypoint.sh               # Script de inicialização do contêiner Docker
+│   ├── seed.ts
+│   └── migrations/
+├── src/
+│   ├── config/
+│   ├── middlewares/
+│   ├── controllers/
+│   ├── routes/
+│   ├── services/
+│   ├── types/
+│   ├── validation/
+│   └── server.ts
+└── README.md
 ```
 
 ---
 
 ## ✨ Funcionalidades da API
 
-### Autenticação e Usuários
+### 🔐 Autenticação e Usuários
 
-* `POST /api/users/register`: Registra um novo usuário (papel USER padrão)
-* `POST /api/users/login`: Autentica e retorna um JWT
-* `GET /api/users/me`: Perfil do usuário autenticado (Requer JWT)
-* `GET /api/users/:id`: Perfil de outro usuário (Requer JWT, ADMIN apenas)
-* `PUT /api/users/:id`: Atualiza usuário (USER pode alterar o próprio, ADMIN qualquer um)
-* `DELETE /api/users/:id`: Remove usuário (ADMIN apenas)
-* `GET /api/users`: Lista todos os usuários (ADMIN apenas)
+- `POST /api/users/register`: Registra novo usuário.
+- `POST /api/users/login`: Login e retorna JWT.
+- `GET /api/users/me`: Perfil do usuário autenticado (JWT).
+- `GET /api/users/:id`: Perfil de outro usuário (JWT + ADMIN).
+- `PUT /api/users/:id`: Atualiza perfil (próprio se USER, qualquer um se ADMIN).
+- `DELETE /api/users/:id`: Deleta usuário (ADMIN).
+- `GET /api/users`: Lista todos usuários (ADMIN).
 
-### Eventos
+### 📅 Eventos
 
-* `POST /api/events`: Cria evento (ADMIN apenas)
-* `GET /api/events`: Lista eventos (filtro: `name`, `date`)
-* `GET /api/events/:id`: Detalhes de evento
-* `PUT /api/events/:id`: Atualiza evento (ADMIN apenas)
-* `DELETE /api/events/:id`: Remove evento (ADMIN apenas)
+- `POST /api/events`: Cria evento (ADMIN).
+- `GET /api/events`: Lista eventos (filtros: name, date).
+- `GET /api/events/:id`: Detalhes de evento.
+- `PUT /api/events/:id`: Atualiza evento (ADMIN).
+- `DELETE /api/events/:id`: Remove evento (ADMIN).
 
-### Reservas
+### 📌 Reservas
 
-* `POST /api/reservations/events/:id/reserve`: Reserva vaga (USER apenas)
-* `DELETE /api/reservations/:id`: Cancela reserva (USER pode cancelar próprias, ADMIN qualquer uma)
-* `GET /api/reservations/my-reservations`: Lista reservas do usuário autenticado (USER apenas)
-* `GET /api/reservations/events/:id/reservations`: Lista reservas de um evento (ADMIN apenas)
-
----
-
-## 🚀 Como Executar (Localmente via Docker Compose)
-
-Para rodar o backend, utilize o Docker Compose conforme descrito no README da raiz do projeto. Ele cuida da integração com frontend, banco e cache.
+- `POST /api/reservations/events/:id/reserve`: Reserva evento (USER).
+- `DELETE /api/reservations/:id`: Cancela reserva (USER/ADMIN).
+- `GET /api/reservations/my-reservations`: Reservas do usuário (USER).
+- `GET /api/reservations/events/:id/reservations`: Todas as reservas do evento (ADMIN).
 
 ---
 
-## 🌱 Variáveis de Ambiente (`.env`)
+## ⚙️ Como Executar (via Docker Compose)
 
-O backend depende das seguintes variáveis:
+Recomenda-se rodar o backend com Docker Compose. Siga o `README.md` do projeto raiz.
 
-```env
-DATABASE_URL=postgresql://user:password@db:5432/database
-REDIS_URL=redis://default@redis:6379
-JWT_SECRET=chave_super_secreta
-NODE_ENV=development
-PORT=3001
+---
+
+## 🛠️ Variáveis de Ambiente (.env)
+
+O backend usa as seguintes variáveis:
+
+- `DATABASE_URL`: Conexão com PostgreSQL (`db` no Docker).
+- `REDIS_URL`: Conexão com Redis (`redis` no Docker).
+- `JWT_SECRET`: Chave JWT.
+- `NODE_ENV`: `development` ou `production`.
+- `PORT`: Porta do servidor Express (padrão: 3001).
+
+---
+
+## 🐳 Dockerfile & Procfile
+
+- **Dockerfile:** Multi-stage para imagem otimizada.
+- **Procfile (Heroku):**
+  - `web`: `npm run start`
+  - `release`: `npx prisma migrate deploy`
+
+---
+
+## 🧪 Verificação Manual
+
+Teste com Postman, Insomnia ou via frontend.
+
+Use os comandos do `Makefile` localmente no projeto raiz:
+
+```bash
+make test-token
+make test-me
+make test-reservations
 ```
-
----
-
-## 🐳 Dockerfile
-
-O Dockerfile do backend é multi-stage, com os seguintes estágios:
-
-1. Instalação das dependências de desenvolvimento
-2. Compilação do TypeScript
-3. Criação da imagem final com apenas dependências de produção
-4. Instalação de `openssl` e `postgresql-client` (para `pg_isready` e compatibilidade Prisma)
-5. Copia e usa `entrypoint.sh` para aplicar migrações e rodar o seed na inicialização
-
----
-
-## 📝 Testes
-
-A API pode ser testada via:
-
-* **Postman** ou **Insomnia** (manual)
-* **Frontend integrado** (recomendado para fluxo completo de usuário)
-
----
-
-> Para dúvidas e problemas, verifique os logs com `docker compose logs -f backend`.
