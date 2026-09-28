@@ -3,13 +3,10 @@
 
 Este é um sistema full-stack de gerenciamento de eventos que permite que **administradores** criem e gerenciem eventos, enquanto **usuários comuns** podem visualizar e reservar vagas.  
 
-## 🌍 Links de Produção (Demo)
+> **Nota:** a demo hospedada saiu do ar — o backend rodava no plano gratuito
+> da Heroku, descontinuado. Para executar localmente com backend e frontend
+> completos: `docker compose up`.
 
-- Frontend (Vercel): https://frontend-emsr.vercel.app
-- Backend (Heroku): https://emsr-backend-24afa39be4e1.herokuapp.com/api/health
-- Repositório: github.com/EduardoFerr/mvp_gerenciador_de_eventos/tree/main
-- [Repositório Frontend](https://github.com/EduardoFerr/mvp_gerenciador_de_eventos/tree/main/backend)
-- [Repositório Backend](https://github.com/EduardoFerr/mvp_gerenciador_de_eventos/tree/main/frontend)
 ---
 
 ## 🚀 Tecnologias Utilizadas
